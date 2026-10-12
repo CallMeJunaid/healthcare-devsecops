@@ -2,13 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/CallMeJunaid/healthcare-devsecops.git'
-            }
-        }
-
         stage('Check Project Files') {
             steps {
                 powershell '''
@@ -30,10 +23,6 @@ pipeline {
                 powershell '''
                     $html = Get-Content "index.html" -Raw
 
-                    if ($html -match '<script\\b') {
-                        Write-Host "Review inline JavaScript for security issues."
-                    }
-
                     if ($html -match 'password\\s*=') {
                         throw "Potential hard-coded password found."
                     }
@@ -42,14 +31,25 @@ pipeline {
                 '''
             }
         }
+
+        stage('OWASP ZAP Scan') {
+            steps {
+                powershell '''
+                    docker run --rm `
+                      ghcr.io/zaproxy/zaproxy:stable `
+                      zap-baseline.py `
+                      -t http://host.docker.internal:8000
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo 'Healthcare DevSecOps pipeline completed successfully.'
+            echo 'Healthcare DevSecOps pipeline completed.'
         }
         failure {
-            echo 'Pipeline failed. Check the console output.'
+            echo 'Pipeline failed. Check the Console Output.'
         }
     }
 }
