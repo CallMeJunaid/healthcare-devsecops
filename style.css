@@ -1,0 +1,43 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f5f9;
+    margin: 0;
+    color: #263238;
+}
+
+header {
+    background: #087f8c;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+main {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #e0f2f1;
+}
+
+.notice {
+    margin-top: 25px;
+    color: #52616b;
+    font-size: 14px;
+}
