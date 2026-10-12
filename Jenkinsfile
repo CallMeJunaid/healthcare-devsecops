@@ -33,15 +33,20 @@ pipeline {
         }
 
         stage('OWASP ZAP Scan') {
-            steps {
-                powershell '''
-                    docker run --rm `
-                      ghcr.io/zaproxy/zaproxy:stable `
-                      zap-baseline.py `
-                      -t http://host.docker.internal:8000
-                '''
+    steps {
+        powershell '''
+            docker run --rm `
+              ghcr.io/zaproxy/zaproxy:stable `
+              zap-baseline.py `
+              -t http://host.docker.internal:8000 `
+              -I
+
+            if ($LASTEXITCODE -ne 0) {
+                throw "OWASP ZAP scan encountered a blocking error."
             }
-        }
+        '''
+    }
+}
     }
 
     post {
